@@ -10,8 +10,8 @@ class Player:
         self.attack_power = attack_power
         self.shield = 0
         self.ability_cooldowns = {
-            "heavy_strike": 0,
-            "heal": 0,
+            "targeted_attack": 0,
+            "repair": 0,
             "shield": 0
         }
 
@@ -34,21 +34,21 @@ class Player:
         target.take_damage(damage)
         return f"regular attack dealing {damage} damage"
 
-    def heavy_strike(self, target):
-        if self.ability_cooldowns["heavy_strike"] > 0:
-            return "failed - Heavy Strike on cooldown"
+    def targeted_attack(self, target):
+        if self.ability_cooldowns["targeted_attack"] > 0:
+            return "failed - Targeted strike on cooldown"
         damage = random.randint(self.attack_power, self.attack_power * 2)
         target.take_damage(damage)
-        self.ability_cooldowns["heavy_strike"] = 3
-        return f"Heavy Strike dealing {damage} damage"
+        self.ability_cooldowns["targeted_attack"] = 3
+        return f"Targeted strike, targeting a weak spot in the server dealing {damage} damage"
 
     def heal(self):
-        if self.ability_cooldowns["heal"] > 0:
-            return "failed - Heal on cooldown"
+        if self.ability_cooldowns["repair"] > 0:
+            return "failed - Repair on cooldown"
         heal_amount = random.randint(20, 35)
         self.health = min(self.max_health, self.health + heal_amount)
-        self.ability_cooldowns["heal"] = 4
-        return f"Heal restoring {heal_amount} HP"
+        self.ability_cooldowns["repair"] = 4
+        return f"Repair, restoring {heal_amount} HP"
 
     def shield_up(self):
         if self.ability_cooldowns["shield"] > 0:
@@ -56,7 +56,7 @@ class Player:
         shield_amount = random.randint(15, 25)
         self.shield += shield_amount
         self.ability_cooldowns["shield"] = 3
-        return f"Shield Up gaining {shield_amount} shield points"
+        return f"Shield Up, lowering risk by {shield_amount} points"
 
 def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -64,13 +64,13 @@ def clear_screen():
 def display_stats(player1, player2):
     print("\n" + "="*60)
     print(f"{player1.name}: HP {player1.health}/{player1.max_health} | Shield: {player1.shield}")
-    print(f"Cooldowns: Heavy Strike: {player1.ability_cooldowns['heavy_strike']}, "
-          f"Heal: {player1.ability_cooldowns['heal']}, "
+    print(f"Cooldowns: Targeted strike: {player1.ability_cooldowns['targeted_attack']}, "
+          f"Repair: {player1.ability_cooldowns['repair']}, "
           f"Shield: {player1.ability_cooldowns['shield']}")
     print("-"*60)
     print(f"{player2.name}: HP {player2.health}/{player2.max_health} | Shield: {player2.shield}")
-    print(f"Cooldowns: Heavy Strike: {player2.ability_cooldowns['heavy_strike']}, "
-          f"Heal: {player2.ability_cooldowns['heal']}, "
+    print(f"Cooldowns: Targeted strike: {player2.ability_cooldowns['targeted_attack']}, "
+          f"Repair: {player2.ability_cooldowns['repair']}, "
           f"Shield: {player2.ability_cooldowns['shield']}")
     print("="*60 + "\n")
 
@@ -78,8 +78,8 @@ def get_player_choice(player):
     while True:
         print(f"\n{player.name}'s turn!")
         print("1: Regular Attack (No cooldown)")
-        print("2: Heavy Strike (Deals 1-2x damage, Cooldown: 3 turns)")
-        print("3: Heal (Restores 20-35 HP, Cooldown: 4 turns)")
+        print("2: Targeted strike (Deals 1-2x damage, Cooldown: 3 turns)")
+        print("3: Repair (Restores 20-35 HP, Cooldown: 4 turns)")
         print("4: Shield Up (Blocks 15-25 damage, Cooldown: 3 turns)")
         choice = input("Choose your action (1-4): ")
         if choice in ['1', '2', '3', '4']:
@@ -87,12 +87,12 @@ def get_player_choice(player):
 
 def main():
     # Get player names
-    print("Welcome to the Battle Arena!")
+    print("Welcome to the Cyber Attack!")
     print("\nAbilities:")
-    print("- Regular Attack: Basic damage")
-    print("- Heavy Strike: Powerful attack with 3 turn cooldown")
-    print("- Heal: Restore HP with 4 turn cooldown")
-    print("- Shield Up: Gain temporary shield with 3 turn cooldown")
+    print("- Regular Attack: Basic damage to your opponent's servers")
+    print("- Targeted strike: Powerful targeted attack with 3 turn cooldown")
+    print("- Repair: Restore sever health with 4 turn cooldown")
+    print("- Shield Up: Reduce risk temporarily with 3 turn cooldown")
     
     player1_name = input("\nEnter Player 1's name: ")
     player2_name = input("Enter Player 2's name: ")
@@ -120,7 +120,7 @@ def main():
         if choice == '1':
             result = current_player.regular_attack(target)
         elif choice == '2':
-            result = current_player.heavy_strike(target)
+            result = current_player.targeted_attack(target)
         elif choice == '3':
             result = current_player.heal()
         elif choice == '4':
